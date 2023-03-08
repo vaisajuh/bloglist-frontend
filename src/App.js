@@ -7,7 +7,7 @@ import Togglable from './components/Togglable'
 import LoginForm from './components/LoginForm'
 
 const App = () => {
-  
+
   const [blogs, setBlogs] = useState([])
   const [errorMessage, setErrorMessage] = useState(null)
   const [successMessage, setSuccessMessage] = useState(null)
@@ -16,13 +16,13 @@ const App = () => {
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
-    )  
+    )
   }, [])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedUser')
     if (loggedUserJSON) {
-      
+
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
       blogService.setToken(user.token)
@@ -34,7 +34,7 @@ const App = () => {
       const user = await loginService.login(event)
       window.localStorage.setItem(
         'loggedUser', JSON.stringify(user)
-      ) 
+      )
       blogService.setToken(user.token)
       setUser(user)
 
@@ -46,12 +46,12 @@ const App = () => {
     }
   }
 
-  const handleBlogChange = (blogObject) => {
+  const handleNewBlog = (blogObject) => {
     try {
       blogService
         .addNewBlog(blogObject)
         .then(returnedBlog => {
-          const newObject = {username: user.name, ...returnedBlog}
+          const newObject = { username: user.name, ...returnedBlog }
           setSuccessMessage(`a new blog: ${newObject.title} by ${newObject.author} added`)
           setBlogs(blogs.concat(newObject))
           blogFormRef.current.toggleVisibility()
@@ -68,7 +68,7 @@ const App = () => {
   }
 
   const handleBlogUpdate = (blogObject) => {
-    
+    console.log('jees')
     try {
       blogService
         .updateBlog(blogObject)
@@ -85,23 +85,25 @@ const App = () => {
   }
 
   const  handleDeleteBlog = (blogObject) => {
-    blogService
-      .deleteBlog(blogObject)
-      .then(returnedBlog => {
-        let modifiedBlogs = blogs.filter(function(blog) {
-          return blog.id !== blogObject.id
-        })
-        setBlogs(modifiedBlogs)
+    try {
+      blogService
+        .deleteBlog(blogObject)
+      let modifiedBlogs = blogs.filter(function(blog) {
+        return blog.id !== blogObject.id
       })
+      setBlogs(modifiedBlogs)
+    } catch (error) {
+      console.log()
+    }
   }
 
-  const handleLogout = async (event) => {
+  const handleLogout =  () => {
     window.localStorage.removeItem('loggedUser')
     setUser(null)
   }
 
   const sortedMap = blogs.sort((a,b)  => b.likes - a.likes)
-  
+
   const GetBlogs = () => (
     <div>
       <h2>blogs</h2>
@@ -113,10 +115,10 @@ const App = () => {
 
   const Message = () => {
     if (successMessage) {
-      return <h2 style={{ color:"green" }}>{successMessage}</h2>
+      return <h2 style={{ color:'green' }}>{successMessage}</h2>
     }
     if (errorMessage) {
-      return <h2 style={{ color:"red" }}>{errorMessage}</h2>
+      return <h2 style={{ color:'red' }}>{errorMessage}</h2>
     }
   }
 
@@ -126,7 +128,7 @@ const App = () => {
     <div>
       <h1>Blogs</h1>
       {Message()}
-      {!user && 
+      {!user &&
         <div>
           <Togglable buttonLabel="login">
             <LoginForm
@@ -136,13 +138,13 @@ const App = () => {
         </div>}
       {user && <div>
         <p>{user.name} logged in <button onClick={() => handleLogout()}>logout</button></p>
-          {GetBlogs()}
-        </div>}
+        {GetBlogs()}
+      </div>}
       {user &&
         <div>
           <Togglable buttonLabel="new blog" ref={blogFormRef}>
             <BlogForm
-              handleBlogChange={handleBlogChange}
+              handleNewBlog={handleNewBlog}
             />
           </Togglable>
         </div>}

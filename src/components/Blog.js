@@ -12,7 +12,7 @@ const Blog = ({ blog, handleBlogUpdate, handleDeleteBlog, user }) => {
     blog.likes += 1
     handleBlogUpdate(blog)
   }
-  
+
   const handleDeleteButton = (blog) => {
 
     if (window.confirm(`Delete ${blog.title}?`)) {
@@ -30,28 +30,28 @@ const Blog = ({ blog, handleBlogUpdate, handleDeleteBlog, user }) => {
 
   if (button) {
     return (
-    <div style={blogStyle}>
-      <div> 
-        {blog.title}  <button onClick={() => handleVisibilityButton()}>hide</button> <br />
-        {blog.author} <br />
-        {blog.url} <br />
+      <div style={blogStyle}>
+        <div>
+          {blog.title}  <button onClick={() => handleVisibilityButton()}>hide</button> <br />
+          {blog.author} <br />
+          {blog.url} <br />
         likes {blog.likes} <button onClick={() => handleLikeButton(blog)}>like</button> <br />
-        {((blog.user.id) === user.id || blog.user === user.id) &&
+          {((blog.user.id) === user.id || blog.user === user.id) &&
         <div>
           <button onClick={() => handleDeleteButton(blog)}>delete</button> <br />
-          </div> }
+        </div> }
+        </div>
       </div>
-    </div>
     )
   }
 
   return (
-    <div style={blogStyle}>
-      <div> 
+    <div style={blogStyle} className="blog">
+      <div>
         {blog.title} <br />
         {blog.author} <button onClick={handleVisibilityButton}>view</button>
       </div>
     </div>
-)}
+  )}
 
 export default Blog
