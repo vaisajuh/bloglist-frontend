@@ -58,7 +58,7 @@ const App = () => {
         })
       setTimeout(() => {
         setSuccessMessage(null)
-      }, 5000)
+      }, 1000)
     } catch (exception) {
       setErrorMessage('Title or url can not be empty')
       setTimeout(() => {
@@ -127,22 +127,24 @@ const App = () => {
   return (
     <div>
       <h1>Blogs</h1>
-      {Message()}
+      <div className="info">
+        {Message()}
+      </div>
       {!user &&
         <div>
-          <Togglable buttonLabel="login">
+          <Togglable buttonLabel="login" id="login">
             <LoginForm
               handleLogin={handleLogin}
             />
           </Togglable>
         </div>}
       {user && <div>
-        <p>{user.name} logged in <button onClick={() => handleLogout()}>logout</button></p>
+        <p>{user.name} logged in <button onClick={() => handleLogout()} id="logout">logout</button></p>
         {GetBlogs()}
       </div>}
       {user &&
         <div>
-          <Togglable buttonLabel="new blog" ref={blogFormRef}>
+          <Togglable buttonLabel="new blog" id="newBlog" ref={blogFormRef}>
             <BlogForm
               handleNewBlog={handleNewBlog}
             />
